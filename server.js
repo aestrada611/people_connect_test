@@ -27,22 +27,7 @@ app.use('/api/people/', async (req, res) => {
     const results = data.results.concat(...pageData.map(data => data.results));
 
     res.json(results);
-    // let results = [];
-    // let nextURL = 'https://swapi.dev/api/people/' + req.url;
 
-    // while (nextURL) {
-    //     const response = await axios.get(nextURL);
-    //     console.log(response.data, "this is response.data", response.data.results, "this is response.data.results", response);
-
-    //     // Push the results to the array
-    //     results = results.concat(response.data.results);
-
-    //     // Update the nextURL for the next loop iteration
-    //     nextURL = response.data.next;
-    // }
-
-    // // Send the combined results back to the client
-    // res.json(results);
 } catch (error) {
     res.status(500).send('Error accessing Star Wars API');
 }
