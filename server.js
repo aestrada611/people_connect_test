@@ -8,35 +8,25 @@ const compiler = webpack(config);
 const app = express();
 
 
-app.use('/api/people/', async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const response = await axios.get(`https://swapi.dev/api/people/?page=${page}`);
-    const data = response.data;
-    res.json(data);
-  } catch (error) {
-    res.status(500).send('Error accessing Star Wars API');
-  }
-});
 // Proxy requests to Star Wars API
-// app.use('/api/people/', async (req, res) => {
+app.use('/api/people/', async (req, res) => {
 
-//     try {
-//          const response = await axios.get('https://swapi.dev/api/people/');
-//     const data = response.data;
-//     const pageCount = Math.ceil(data.count / data.results.length);
-//     const pagePromises = [];
+    try {
+         const response = await axios.get('https://swapi.dev/api/people/');
+    const data = response.data;
+    const pageCount = Math.ceil(data.count / data.results.length);
+    const pagePromises = [];
 
-//     for (let i = 2; i <= pageCount; i++) {
-//       pagePromises.push(axios.get(`https://swapi.dev/api/people/?page=${i}`));
-//     }
+    for (let i = 2; i <= pageCount; i++) {
+      pagePromises.push(axios.get(`https://swapi.dev/api/people/?page=${i}`));
+    }
 
-//     const pageResponses = await Promise.all(pagePromises);
-//     const pageData = pageResponses.map(response => response.data);
+    const pageResponses = await Promise.all(pagePromises);
+    const pageData = pageResponses.map(response => response.data);
 
-//     const results = data.results.concat(...pageData.map(data => data.results));
+    const results = data.results.concat(...pageData.map(data => data.results));
 
-//     res.json(results);
+    res.json(results);
     // let results = [];
     // let nextURL = 'https://swapi.dev/api/people/' + req.url;
 
@@ -53,10 +43,10 @@ app.use('/api/people/', async (req, res) => {
 
     // // Send the combined results back to the client
     // res.json(results);
-// } catch (error) {
-//     res.status(500).send('Error accessing Star Wars API');
-// }
-// });
+} catch (error) {
+    res.status(500).send('Error accessing Star Wars API');
+}
+});
 
 app.use('/api/film/:id', async (req, res) => {
     try {
