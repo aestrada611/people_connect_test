@@ -139,12 +139,6 @@ function App() {
 
         setSharedStarships(sharedStarships);
         setSharedVehicles(sharedVehicles);
-        console.log(
-          sharedStarships,
-          "this is sharedStarships",
-          sharedVehicles,
-          "this is sharedVehicles"
-        );
 
         //This block sets alert message if they shared a film and not a planet, starship, or vehicle
         if (
@@ -162,13 +156,6 @@ function App() {
             `${name1} and ${name2} have appeared in the following films together: ${films}. `
           );
         }
-
-        console.log(
-          sharedFilms,
-          sharedHomeworld,
-          sharedStarships,
-          sharedVehicles
-        );
       } else {
         setAlertMessage("Please select two characters.");
       }
@@ -207,13 +194,19 @@ function App() {
 
       {errorMessage && <div>{errorMessage}</div>}
 
+      {alertMessage.length > 0 && (
+        <div>
+          <h2>{alertMessage}</h2>
+        </div>
+      )}
+
       {sharedFilms.length > 0 && (
         <div>
           <h2>Shared Films:</h2>
           <ul>
             {sharedFilms.map((film, index) => (
               <li key={index}>
-                <a>{film}</a>
+                <p>{film}</p>
               </li>
             ))}
           </ul>
@@ -248,12 +241,6 @@ function App() {
               <li key={index}>{vehicle.name}</li>
             ))}
           </ul>
-        </div>
-      )}
-
-      {alertMessage.length > 0 && (
-        <div>
-          <h2>{alertMessage}</h2>
         </div>
       )}
     </div>
