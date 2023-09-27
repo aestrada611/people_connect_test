@@ -42,23 +42,25 @@ button:disabled {
 }
 
 .intro-text {
-  width: 100%; /* Make sure the width is 100% */
+  width: 100%;
   font-family: "Star Jedi", sans-serif;
   font-size: 2rem;
   color: #ffe81f;
   text-align: center;
-  position: absolute; /* Position text absolutely to start at the bottom */
+  position: absolute;
   bottom: 0;
   overflow: hidden;
   white-space: pre-wrap;
-  /* animation: scroll 20s linear infinite; */
-  animation: scroll 20s linear infinite;
   animation-fill-mode: backwards;
   position: absolute;
-  top: 100%; /* this positions the text right below the viewable area */
+  top: 100%;
   left: 0;
   right: 0;
   background: linear-gradient(to bottom, transparent, #000 50%, transparent);
+}
+
+.scrolling {
+  animation: scroll 20s linear infinite;
 }
 
 @keyframes scroll {

@@ -13,6 +13,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
+  const [animationReady, setAnimationReady] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -161,6 +162,7 @@ function App() {
               ", "
             )}`
           );
+          setTimeout(() => setAnimationReady(true), 2000);
           setLoading(false);
           return;
         } else if (sharedFilms.length > 0) {
@@ -169,6 +171,7 @@ function App() {
               ", "
             )}.`
           );
+          setTimeout(() => setAnimationReady(true), 2000);
         }
       } else {
         setAlertMessage("Please select two characters.");
@@ -209,7 +212,7 @@ function App() {
       {errorMessage && <div>{errorMessage}</div>}
 
       <div className="intro-text-container">
-        <div className="intro-text">
+        <div className={animationReady ? "intro-text scrolling" : "intro-text"}>
           {alertMessage.length > 0 && (
             <div>
               <h2>{alertMessage}</h2>
