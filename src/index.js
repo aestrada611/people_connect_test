@@ -70,51 +70,16 @@ function App() {
 
         console.log(character2, "this is character2");
 
-        const sharedStarships = starships1.filter((starship) =>
-          starships2.includes(starship)
-        );
-        const sharedVehicles = vehicles1.filter((vehicle) =>
-          vehicles2.includes(vehicle)
-        );
-
-        const starshipNames = [];
-        if (sharedStarships.length > 0) {
-          const sharedStarshipNames = sharedStarships.map(async (starship) => {
-            const starshipId = starship.split("/")[5];
-            const starshipResponse = await fetch(
-              `/api/starships/${starshipId}`
-            );
-            const starshipData = await starshipResponse.json();
-            starshipNames.push(starshipData.name);
-            return starshipData.name;
-          });
-        }
-
-        const vehicleNames = [];
-        if (sharedVehicles.length > 0) {
-          const sharedVehicleNames = sharedVehicles.map(async (vehicle) => {
-            const vehicleId = vehicle.split("/")[5];
-            const vehicleResponse = await fetch(`/api/vehicles/${vehicleId}`);
-            const vehicleData = await vehicleResponse.json();
-            vehicleNames.push(vehicleData.name);
-            return vehicleData.name;
-          });
-        }
-
-        setSharedStarships(starshipNames);
-        setSharedVehicles(vehicleNames);
-
         //This block determines if there are shared films
         const sharedFilms = films1
           .filter((film) => films2.includes(film))
           .map((filmUrl) => {
             console.log(filmUrl, "this is filmUrl");
             const filmIndex = filmUrl.match(/\/films\/(\d+)\//)[1];
-            // const filmTitle = filmUrl.split("/")[5];
-            return { index: filmIndex };
+            return { movieIndex: filmIndex };
           });
 
-        const sharedFilmTitles = sharedFilms.map((film) => film.index);
+        const sharedFilmTitles = sharedFilms.map((film) => film.movieIndex);
 
         //this ends the function if they do not share films
         if (sharedFilmTitles.length === 0) {
@@ -125,18 +90,59 @@ function App() {
           return;
         }
 
+        //This block determines if they share starships or vehicles
+        const sharedStarships = starships1.filter((starship) =>
+          starships2.includes(starship)
+        );
+        const sharedVehicles = vehicles1.filter((vehicle) =>
+          vehicles2.includes(vehicle)
+        );
+
+        const starshipNames = [];
+        if (sharedStarships.length > 0) {
+          sharedStarships.map(async (starship) => {
+            const starshipId = starship.split("/")[5];
+            const starshipResponse = await fetch(
+              `/api/starships/${starshipId}`
+            );
+            const starshipData = await starshipResponse.json();
+            starshipNames.push(starshipData.name);
+          });
+        }
+
+        const vehicleNames = [];
+        if (sharedVehicles.length > 0) {
+          sharedVehicles.map(async (vehicle) => {
+            const vehicleId = vehicle.split("/")[5];
+            const vehicleResponse = await fetch(`/api/vehicles/${vehicleId}`);
+            const vehicleData = await vehicleResponse.json();
+            vehicleNames.push(vehicleData.name);
+          });
+        }
+
+        setSharedStarships(starshipNames);
+        setSharedVehicles(vehicleNames);
+
         //This loop gets the film titles
         //An alterative way to do this is store the names of all the films in local
         //storage and then just use a switch case with the corresponding film id
-        const films = [];
-        for (let i = 0; i < sharedFilmTitles.length; i++) {
-          const id = sharedFilmTitles[i];
-          const filmResponse = await fetch(`/api/films/${id}`);
-          const filmData = await filmResponse.json();
-          console.log(filmData, "this is filmData");
-          const film = filmData;
-          films.push(film);
-        }
+        // const films = [];
+        // for (let i = 0; i < sharedFilmTitles.length; i++) {
+        //   const id = sharedFilmTitles[i];
+        //   const filmResponse = await fetch(`/api/films/${id}`);
+        //   const filmData = await filmResponse.json();
+        //   console.log(filmData, "this is filmData");
+        //   const film = filmData;
+        //   films.push(film);
+        // }
+
+        const filmResponses = await Promise.all(
+          sharedFilmTitles.map((id) => fetch(`/api/films/${id}`))
+        );
+
+        const films = await Promise.all(
+          filmResponses.map((response) => response.json())
+        );
 
         console.log(films);
         setSharedFilms(films);
@@ -231,7 +237,9 @@ function App() {
           <h2>Shared Starships:</h2>
           <ul>
             {sharedStarships.map((starship, index) => (
-              <li key={index}>{starship}</li>
+              <li key={index}>
+                <p>{starship}</p>
+              </li>
             ))}
           </ul>
         </div>
