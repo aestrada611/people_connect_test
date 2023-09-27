@@ -30,25 +30,42 @@ button:disabled {
 .container {
   height: 100vh;
   overflow: hidden;
+  position: relative;
+}
+
+.intro-text-container {
+  height: 100vh;
+  display: flex;
+  justify-content: flex-start; /* Align text to the start/bottom */
+  align-items: flex-end; /* Align items to the bottom */
+  position: relative; /* Set position relative for child positioning */
 }
 
 .intro-text {
+  width: 100%; /* Make sure the width is 100% */
   font-family: "Star Jedi", sans-serif;
   font-size: 2rem;
   color: #ffe81f;
   text-align: center;
-  position: relative;
+  position: absolute; /* Position text absolutely to start at the bottom */
+  bottom: 0;
   overflow: hidden;
   white-space: pre-wrap;
+  /* animation: scroll 20s linear infinite; */
   animation: scroll 20s linear infinite;
+  animation-fill-mode: backwards;
+  position: absolute;
+  top: 100%; /* this positions the text right below the viewable area */
+  left: 0;
+  right: 0;
   background: linear-gradient(to bottom, transparent, #000 50%, transparent);
 }
 
 @keyframes scroll {
   0% {
-    transform: translateY(150%);
+    top: 100%;
   }
   100% {
-    transform: translateY(calc(-100% + 3rem));
+    top: calc(-100% + 3rem);
   }
 }

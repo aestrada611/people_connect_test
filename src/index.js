@@ -213,52 +213,52 @@ function App() {
           {alertMessage.length > 0 && (
             <div>
               <h2>{alertMessage}</h2>
-            </div>
-          )}
 
-          {sharedFilms.length > 0 && (
-            <div>
-              <h2>Shared Films:</h2>
-              <ul>
-                {sharedFilms.map((film, index) => (
-                  <li key={index}>
-                    <p>{film}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+              {sharedHomeworld.length > 0 && (
+                <div>
+                  <h2>Shared Planets:</h2>
+                  <ul>
+                    <li>{sharedHomeworld}</li>
+                  </ul>
+                </div>
+              )}
 
-          {sharedStarships.length > 0 && (
-            <div>
-              <h2>Shared Starships:</h2>
-              <ul>
-                {sharedStarships.map((starship, index) => (
-                  <li key={index}>
-                    <p>{starship}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+              {sharedFilms.length > 0 && (
+                <div>
+                  <h2>Shared Films:</h2>
+                  <ul>
+                    {sharedFilms.map((film, index) => (
+                      <li key={index}>
+                        <p>{film}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-          {sharedHomeworld.length > 0 && (
-            <div>
-              <h2>Shared Planets:</h2>
-              <ul>
-                <li>{sharedHomeworld}</li>
-              </ul>
-            </div>
-          )}
+              {sharedStarships.length > 0 && (
+                <div>
+                  <h2>Shared Starships:</h2>
+                  <ul>
+                    {sharedStarships.map((starship, index) => (
+                      <li key={index}>
+                        <p>{starship}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-          {sharedVehicles.length > 0 && (
-            <div>
-              <h2>Shared Vehicles:</h2>
-              <ul>
-                {sharedVehicles.map((vehicle, index) => (
-                  <li key={index}>{vehicle}</li>
-                ))}
-              </ul>
+              {sharedVehicles.length > 0 && (
+                <div>
+                  <h2>Shared Vehicles:</h2>
+                  <ul>
+                    {sharedVehicles.map((vehicle, index) => (
+                      <li key={index}>{vehicle}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
         </div>
