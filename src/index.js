@@ -46,29 +46,22 @@ function App() {
         return;
       } else if (selectedCharacter1 && selectedCharacter2) {
         //This is the set up for the first character
-        const response1 = await fetch(selectedCharacter1);
-        const character1 = await response1.json();
-        console.log(character1, "this is character1");
         const {
           name: name1,
           films: films1,
           homeworld: planets1,
           starships: starships1,
           vehicles: vehicles1,
-        } = character1;
+        } = await (await fetch(selectedCharacter1)).json();
 
         //This is the set up for the second character
-        const response2 = await fetch(selectedCharacter2);
-        const character2 = await response2.json();
         const {
           name: name2,
           films: films2,
           homeworld: planets2,
           starships: starships2,
           vehicles: vehicles2,
-        } = character2;
-
-        console.log(character2, "this is character2");
+        } = await (await fetch(selectedCharacter2)).json();
 
         //This block determines if there are shared films
         const sharedFilms = films1
@@ -91,14 +84,19 @@ function App() {
         }
 
         //This block determines if they share homePlanet
+        let sharedPlanet = "";
         if (planets1 == planets2) {
           const planetId = planets1.split("/")[5];
+          console.log(planetId, "this is planetId");
           const planetResponse = await fetch(`/api/planets/${planetId}`);
           const planetData = await planetResponse.json();
           console.log(planetData, "this is planetData");
+          const { name } = planetData;
           setSharedHomeworld(planetData.name);
+          sharedPlanet = name;
         } else {
           setSharedHomeworld("");
+          sharedPlanet = "";
         }
 
         //This block determines if they share starships
@@ -154,19 +152,24 @@ function App() {
         setSharedFilms(films);
 
         //This block sets alert message
+
         if (
           sharedStarships.length == 0 &&
           sharedVehicles.length == 0 &&
-          sharedHomeworld == ""
+          sharedPlanet == ""
         ) {
           setAlertMessage(
-            `Although they don't share planets, vehicles nor starships; ${name1} and ${name2} have appeared in the following films together: ${films}`
+            `Although they don't share planets, vehicles nor starships; ${name1} and ${name2} have both appeared in the following films: ${films.join(
+              ", "
+            )}`
           );
           setLoading(false);
           return;
         } else if (sharedFilms.length > 0) {
           setAlertMessage(
-            `${name1} and ${name2} have appeared in the following films together: ${films}.`
+            `${name1} and ${name2} have appeared in the following films together: ${films.join(
+              ", "
+            )}.`
           );
         }
       } else {
