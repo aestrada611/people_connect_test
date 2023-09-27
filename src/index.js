@@ -42,6 +42,7 @@ function App() {
 
       if (selectedCharacter1 == selectedCharacter2) {
         setAlertMessage("Please select two different characters.");
+        setTimeout(() => setAnimationReady(true), 500);
         setLoading(false);
         return;
       } else if (selectedCharacter1 && selectedCharacter2) {
@@ -67,7 +68,6 @@ function App() {
         const sharedFilms = films1
           .filter((film) => films2.includes(film))
           .map((filmUrl) => {
-            console.log(filmUrl, "this is filmUrl");
             const filmIndex = filmUrl.match(/\/films\/(\d+)\//)[1];
             return { movieIndex: filmIndex };
           });
@@ -79,6 +79,7 @@ function App() {
           setAlertMessage(
             `${name1} and ${name2} have not appeared in films together. `
           );
+          setTimeout(() => setAnimationReady(true), 500);
           setLoading(false);
           return;
         }
@@ -87,10 +88,8 @@ function App() {
         let sharedPlanet = "";
         if (planets1 == planets2) {
           const planetId = planets1.split("/")[5];
-          console.log(planetId, "this is planetId");
           const planetResponse = await fetch(`/api/planets/${planetId}`);
           const planetData = await planetResponse.json();
-          console.log(planetData, "this is planetData");
           setSharedHomeworld(planetData.name);
           sharedPlanet = planetData.name;
         } else {
@@ -134,24 +133,16 @@ function App() {
         );
         setSharedVehicles(vehicleNames);
 
-        //An alterative way to do this is store the names of all the films in local
-        //storage and then just use a switch case with the corresponding film id
-        //could store them in an object with the id as the key and the name as the value
-        //This is for films
-
-        //This loop gets the film titles should save for very end because slow an only need to
-        //display if other conditions are met
+        //This block gets movie titles from shared films
         const filmResponses = await Promise.all(
           sharedFilmTitles.map((id) => fetch(`/api/films/${id}`))
         );
         const films = await Promise.all(
           filmResponses.map((response) => response.json())
         );
-        console.log(films);
         setSharedFilms(films);
 
         //This block sets alert message
-
         if (
           sharedStarships.length == 0 &&
           sharedVehicles.length == 0 &&
@@ -162,7 +153,7 @@ function App() {
               ", "
             )}`
           );
-          setTimeout(() => setAnimationReady(true), 2000);
+          setTimeout(() => setAnimationReady(true), 500);
           setLoading(false);
           return;
         } else if (sharedFilms.length > 0) {
@@ -171,12 +162,12 @@ function App() {
               ", "
             )}.`
           );
-          setTimeout(() => setAnimationReady(true), 2000);
+          setTimeout(() => setAnimationReady(true), 500);
         }
       } else {
         setAlertMessage("Please select two characters.");
+        setTimeout(() => setAnimationReady(true), 500);
       }
-
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -187,6 +178,11 @@ function App() {
 
   return (
     <div className="container">
+      <div>
+        <h1 className="headerText">
+          Select Two Different Star Wars Characters
+        </h1>
+      </div>
       <select onChange={(e) => setSelectedCharacter1(e.target.value)}>
         <option value={null}>Select Character 1</option>
         {characters.map((character, index) => (
