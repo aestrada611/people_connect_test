@@ -12,6 +12,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
+  //if they dot have two in common must say some sort of message
 
   useEffect(() => {
     async function fetchData() {
@@ -37,7 +38,9 @@ function App() {
     try {
       setLoading(true);
 
-      if (selectedCharacter1 && selectedCharacter2) {
+      if (selectedCharacter1 == selectedCharacter2) {
+        setAlertMessage("Please select two different characters.");
+      } else if (selectedCharacter1 && selectedCharacter2) {
         //This is the set up for the first character
         const response1 = await fetch(selectedCharacter1);
         const data1 = await response1.json();
@@ -92,8 +95,19 @@ function App() {
 
         const sharedFilmTitles = sharedFilms.map((film) => film.title);
 
-        const films = [];
+        //this ends the function if they do not share films
+        if (sharedFilmTitles.length === 0) {
+          setAlertMessage(
+            `${name1} and ${name2} have not appeared in films together. `
+          );
+          setLoading(false);
+          return;
+        }
 
+        //This loop gets the film titles
+        //An alterative way to do this is store the names of all the films in local
+        //storage and then just use a switch case with the corresponding film id
+        const films = [];
         for (let i = 0; i < sharedFilmTitles.length; i++) {
           const id = sharedFilmTitles[i];
           const filmResponse = await fetch(`/api/films/${id}`);
@@ -125,13 +139,27 @@ function App() {
 
         setSharedStarships(sharedStarships);
         setSharedVehicles(sharedVehicles);
+        console.log(
+          sharedStarships,
+          "this is sharedStarships",
+          sharedVehicles,
+          "this is sharedVehicles"
+        );
 
+        //This block sets alert message if they shared a film and not a planet, starship, or vehicle
         if (
-          sharedFilms.length > 0 &&
-          (sharedStarships > 0 || sharedVehicles > 0 || sharedHomeworld != "")
+          sharedStarships.length <= 0 &&
+          sharedVehicles.length <= 0 &&
+          sharedHomeworld
         ) {
           setAlertMessage(
-            `${name1} and ${name2} have appeared in the following films together:. `
+            `${name1} and ${name2} have appeared in the following films together: ${films} but have not shared a planet, starship, or vehicles.`
+          );
+          setLoading(false);
+          return;
+        } else if (sharedFilms.length > 0) {
+          setAlertMessage(
+            `${name1} and ${name2} have appeared in the following films together: ${films}. `
           );
         }
 
@@ -141,6 +169,8 @@ function App() {
           sharedStarships,
           sharedVehicles
         );
+      } else {
+        setAlertMessage("Please select two characters.");
       }
 
       setLoading(false);
@@ -201,7 +231,7 @@ function App() {
         </div>
       )}
 
-      {sharedHomeworld.length > 0 && (
+      {sharedHomeworld && (
         <div>
           <h2>Shared Planets:</h2>
           <ul>
