@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
+import React, { useState, useEffect } from "react";
+import "./index.css";
 
 function App() {
   const [characters, setCharacters] = useState([]);
@@ -12,7 +13,6 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-  //if they dot have two in common must say some sort of message
 
   useEffect(() => {
     async function fetchData() {
@@ -31,7 +31,6 @@ function App() {
         setErrorMessage("Network error occurred. Please try again later.");
       }
     }
-    //This is the function that is called when the page loads
     fetchData();
   }, []);
 
@@ -91,9 +90,8 @@ function App() {
           const planetResponse = await fetch(`/api/planets/${planetId}`);
           const planetData = await planetResponse.json();
           console.log(planetData, "this is planetData");
-          const { name } = planetData;
           setSharedHomeworld(planetData.name);
-          sharedPlanet = name;
+          sharedPlanet = planetData.name;
         } else {
           setSharedHomeworld("");
           sharedPlanet = "";
@@ -185,7 +183,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="container">
       <select onChange={(e) => setSelectedCharacter1(e.target.value)}>
         <option value={null}>Select Character 1</option>
         {characters.map((character, index) => (
@@ -210,57 +208,61 @@ function App() {
 
       {errorMessage && <div>{errorMessage}</div>}
 
-      {alertMessage.length > 0 && (
-        <div>
-          <h2>{alertMessage}</h2>
-        </div>
-      )}
+      <div className="intro-text-container">
+        <div className="intro-text">
+          {alertMessage.length > 0 && (
+            <div>
+              <h2>{alertMessage}</h2>
+            </div>
+          )}
 
-      {sharedFilms.length > 0 && (
-        <div>
-          <h2>Shared Films:</h2>
-          <ul>
-            {sharedFilms.map((film, index) => (
-              <li key={index}>
-                <p>{film}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+          {sharedFilms.length > 0 && (
+            <div>
+              <h2>Shared Films:</h2>
+              <ul>
+                {sharedFilms.map((film, index) => (
+                  <li key={index}>
+                    <p>{film}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-      {sharedStarships.length > 0 && (
-        <div>
-          <h2>Shared Starships:</h2>
-          <ul>
-            {sharedStarships.map((starship, index) => (
-              <li key={index}>
-                <p>{starship}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+          {sharedStarships.length > 0 && (
+            <div>
+              <h2>Shared Starships:</h2>
+              <ul>
+                {sharedStarships.map((starship, index) => (
+                  <li key={index}>
+                    <p>{starship}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-      {sharedHomeworld && (
-        <div>
-          <h2>Shared Planets:</h2>
-          <ul>
-            <li>{sharedHomeworld}</li>
-          </ul>
-        </div>
-      )}
+          {sharedHomeworld.length > 0 && (
+            <div>
+              <h2>Shared Planets:</h2>
+              <ul>
+                <li>{sharedHomeworld}</li>
+              </ul>
+            </div>
+          )}
 
-      {sharedVehicles.length > 0 && (
-        <div>
-          <h2>Shared Vehicles:</h2>
-          <ul>
-            {sharedVehicles.map((vehicle, index) => (
-              <li key={index}>{vehicle}</li>
-            ))}
-          </ul>
+          {sharedVehicles.length > 0 && (
+            <div>
+              <h2>Shared Vehicles:</h2>
+              <ul>
+                {sharedVehicles.map((vehicle, index) => (
+                  <li key={index}>{vehicle}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

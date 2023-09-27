@@ -1,0 +1,54 @@
+select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  margin-right: 1rem;
+}
+
+body {
+  background-image: url("./galaxy_background.avif");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #0077cc;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.container {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.intro-text {
+  font-family: "Star Jedi", sans-serif;
+  font-size: 2rem;
+  color: #ffe81f;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  white-space: pre-wrap;
+  animation: scroll 20s linear infinite;
+  background: linear-gradient(to bottom, transparent, #000 50%, transparent);
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateY(150%);
+  }
+  100% {
+    transform: translateY(calc(-100% + 3rem));
+  }
+}
