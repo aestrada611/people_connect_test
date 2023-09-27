@@ -66,6 +66,40 @@ app.use("/api/planets/:id", async (req, res) => {
   }
 });
 
+app.use("/api/starships/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log(id, "this is id");
+    const response = await axios.get(`https://swapi.dev/api/starships/${id}/`);
+    console.log(response, "this is response");
+    const data = response.data;
+    console.log(data, "this is data");
+    // if (!data || !Array.isArray(data) || data.length === 0) {
+    //   throw new Error('Empty or malformed response from Star Wars API');
+    // }
+    res.json(data);
+  } catch (error) {
+    res.status(500).send("Error accessing Star Wars API");
+  }
+});
+
+app.use("/api/vehicles/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log(id, "this is id");
+    const response = await axios.get(`https://swapi.dev/api/vehicles/${id}/`);
+    console.log(response, "this is response");
+    const data = response.data;
+    console.log(data, "this is data");
+    // if (!data || !Array.isArray(data) || data.length === 0) {
+    //   throw new Error('Empty or malformed response from Star Wars API');
+    // }
+    res.json(data);
+  } catch (error) {
+    res.status(500).send("Error accessing Star Wars API");
+  }
+});
+
 // Serve static assets
 app.use(webpackDevMiddleware(compiler));
 

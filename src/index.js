@@ -77,8 +77,32 @@ function App() {
           vehicles2.includes(vehicle)
         );
 
-        setSharedStarships(sharedStarships);
-        setSharedVehicles(sharedVehicles);
+        const starshipNames = [];
+        if (sharedStarships.length > 0) {
+          const sharedStarshipNames = sharedStarships.map(async (starship) => {
+            const starshipId = starship.split("/")[5];
+            const starshipResponse = await fetch(
+              `/api/starships/${starshipId}`
+            );
+            const starshipData = await starshipResponse.json();
+            starshipNames.push(starshipData.name);
+            return starshipData.name;
+          });
+        }
+
+        const vehicleNames = [];
+        if (sharedVehicles.length > 0) {
+          const sharedVehicleNames = sharedVehicles.map(async (vehicle) => {
+            const vehicleId = vehicle.split("/")[5];
+            const vehicleResponse = await fetch(`/api/vehicles/${vehicleId}`);
+            const vehicleData = await vehicleResponse.json();
+            vehicleNames.push(vehicleData.name);
+            return vehicleData.name;
+          });
+        }
+
+        setSharedStarships(starshipNames);
+        setSharedVehicles(vehicleNames);
 
         //This block determines if there are shared films
         const sharedFilms = films1
@@ -207,7 +231,7 @@ function App() {
           <h2>Shared Starships:</h2>
           <ul>
             {sharedStarships.map((starship, index) => (
-              <li key={index}>{starship.name}</li>
+              <li key={index}>{starship}</li>
             ))}
           </ul>
         </div>
@@ -227,7 +251,7 @@ function App() {
           <h2>Shared Vehicles:</h2>
           <ul>
             {sharedVehicles.map((vehicle, index) => (
-              <li key={index}>{vehicle.name}</li>
+              <li key={index}>{vehicle}</li>
             ))}
           </ul>
         </div>
