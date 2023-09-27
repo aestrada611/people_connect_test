@@ -90,64 +90,7 @@ function App() {
           return;
         }
 
-        //This block determines if they share starships or vehicles
-        const sharedStarships = starships1.filter((starship) =>
-          starships2.includes(starship)
-        );
-        const sharedVehicles = vehicles1.filter((vehicle) =>
-          vehicles2.includes(vehicle)
-        );
-
-        const starshipNames = [];
-        if (sharedStarships.length > 0) {
-          sharedStarships.map(async (starship) => {
-            const starshipId = starship.split("/")[5];
-            const starshipResponse = await fetch(
-              `/api/starships/${starshipId}`
-            );
-            const starshipData = await starshipResponse.json();
-            starshipNames.push(starshipData.name);
-          });
-        }
-
-        const vehicleNames = [];
-        if (sharedVehicles.length > 0) {
-          sharedVehicles.map(async (vehicle) => {
-            const vehicleId = vehicle.split("/")[5];
-            const vehicleResponse = await fetch(`/api/vehicles/${vehicleId}`);
-            const vehicleData = await vehicleResponse.json();
-            vehicleNames.push(vehicleData.name);
-          });
-        }
-
-        setSharedStarships(starshipNames);
-        setSharedVehicles(vehicleNames);
-
-        //This loop gets the film titles
-        //An alterative way to do this is store the names of all the films in local
-        //storage and then just use a switch case with the corresponding film id
-        // const films = [];
-        // for (let i = 0; i < sharedFilmTitles.length; i++) {
-        //   const id = sharedFilmTitles[i];
-        //   const filmResponse = await fetch(`/api/films/${id}`);
-        //   const filmData = await filmResponse.json();
-        //   console.log(filmData, "this is filmData");
-        //   const film = filmData;
-        //   films.push(film);
-        // }
-
-        const filmResponses = await Promise.all(
-          sharedFilmTitles.map((id) => fetch(`/api/films/${id}`))
-        );
-
-        const films = await Promise.all(
-          filmResponses.map((response) => response.json())
-        );
-
-        console.log(films);
-        setSharedFilms(films);
-
-        //This block determines if they share planet, vehicle, or starship in that order
+        //This block determines if they share homePlanet
         if (planets1 == planets2) {
           const planetId = planets1.split("/")[5];
           const planetResponse = await fetch(`/api/planets/${planetId}`);
@@ -158,15 +101,66 @@ function App() {
           setSharedHomeworld("");
         }
 
-        //This block sets alert message if they shared a film and not a planet, starship, or vehicle
-        //*************** This needs rework attention */
+        //This block determines if they share starships
+        const sharedStarships = starships1.filter((starship) =>
+          starships2.includes(starship)
+        );
+        const starshipIds = sharedStarships.map(
+          (starship) => starship.split("/")[5]
+        );
+        const starshipResponses = await Promise.all(
+          starshipIds.map((id) => fetch(`/api/starships/${id}`))
+        );
+        const starshipDataArray = await Promise.all(
+          starshipResponses.map((response) => response.json())
+        );
+        const starshipNames = starshipDataArray.map(
+          (starshipData) => starshipData.name
+        );
+        setSharedStarships(starshipNames);
+
+        //This block determines if they share vehicles
+        const sharedVehicles = vehicles1.filter((vehicle) =>
+          vehicles2.includes(vehicle)
+        );
+        const vehicleResponses = await Promise.all(
+          sharedVehicles.map((vehicle) => {
+            const vehicleId = vehicle.split("/")[5];
+            return fetch(`/api/vehicles/${vehicleId}`);
+          })
+        );
+        const vehicleDataArray = await Promise.all(
+          vehicleResponses.map((response) => response.json())
+        );
+        const vehicleNames = vehicleDataArray.map(
+          (vehicleData) => vehicleData.name
+        );
+        setSharedVehicles(vehicleNames);
+
+        //An alterative way to do this is store the names of all the films in local
+        //storage and then just use a switch case with the corresponding film id
+        //could store them in an object with the id as the key and the name as the value
+        //This is for films
+
+        //This loop gets the film titles should save for very end because slow an only need to
+        //display if other conditions are met
+        const filmResponses = await Promise.all(
+          sharedFilmTitles.map((id) => fetch(`/api/films/${id}`))
+        );
+        const films = await Promise.all(
+          filmResponses.map((response) => response.json())
+        );
+        console.log(films);
+        setSharedFilms(films);
+
+        //This block sets alert message
         if (
-          sharedStarships.length <= 0 &&
-          sharedVehicles.length <= 0 &&
-          sharedHomeworld
+          sharedStarships.length == 0 &&
+          sharedVehicles.length == 0 &&
+          sharedHomeworld == ""
         ) {
           setAlertMessage(
-            `${name1} and ${name2} have appeared in the following films together: ${films} but have not shared a planet, starship, or vehicles.`
+            `Although they don't share planets, vehicles nor starships; ${name1} and ${name2} have appeared in the following films together: ${films}`
           );
           setLoading(false);
           return;
