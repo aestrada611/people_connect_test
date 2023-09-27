@@ -42,62 +42,55 @@ function App() {
 
       if (selectedCharacter1 == selectedCharacter2) {
         setAlertMessage("Please select two different characters.");
+        setLoading(false);
+        return;
       } else if (selectedCharacter1 && selectedCharacter2) {
         //This is the set up for the first character
         const response1 = await fetch(selectedCharacter1);
         const character1 = await response1.json();
-        console.log(character1, "this is data1");
-        const name1 = character1.name;
-        const films1 = character1.films;
-        const planets1 = character1.homeworld;
-        const starships1 = character1.starships
-          ? await Promise.all(
-              character1.starships.map((url) =>
-                fetch(url).then((response) => response.json())
-              )
-            )
-          : [];
-        const vehicles1 = character1.vehicles
-          ? await Promise.all(
-              character1.vehicles.map((url) =>
-                fetch(url).then((response) => response.json())
-              )
-            )
-          : [];
+        console.log(character1, "this is character1");
+        const {
+          name: name1,
+          films: films1,
+          homeworld: planets1,
+          starships: starships1,
+          vehicles: vehicles1,
+        } = character1;
 
         //This is the set up for the second character
         const response2 = await fetch(selectedCharacter2);
         const character2 = await response2.json();
+        const {
+          name: name2,
+          films: films2,
+          homeworld: planets2,
+          starships: starships2,
+          vehicles: vehicles2,
+        } = character2;
+
         console.log(character2, "this is character2");
-        const name2 = character2.name;
-        const films2 = character2.films;
-        const planets2 = character2.homeworld;
-        const starships2 = character2.starships
-          ? await Promise.all(
-              character2.starships.map((url) =>
-                fetch(url).then((response) => response.json())
-              )
-            )
-          : [];
-        const vehicles2 = character2.vehicles
-          ? await Promise.all(
-              character2.vehicles.map((url) =>
-                fetch(url).then((response) => response.json())
-              )
-            )
-          : [];
+
+        const sharedStarships = starships1.filter((starship) =>
+          starships2.includes(starship)
+        );
+        const sharedVehicles = vehicles1.filter((vehicle) =>
+          vehicles2.includes(vehicle)
+        );
+
+        setSharedStarships(sharedStarships);
+        setSharedVehicles(sharedVehicles);
 
         //This block determines if there are shared films
         const sharedFilms = films1
           .filter((film) => films2.includes(film))
           .map((filmUrl) => {
             console.log(filmUrl, "this is filmUrl");
-            const filmTitle = filmUrl.match(/\/films\/(\d+)\//)[1];
+            const filmIndex = filmUrl.match(/\/films\/(\d+)\//)[1];
             // const filmTitle = filmUrl.split("/")[5];
-            return { title: filmTitle, url: filmUrl };
+            return { index: filmIndex };
           });
 
-        const sharedFilmTitles = sharedFilms.map((film) => film.title);
+        const sharedFilmTitles = sharedFilms.map((film) => film.index);
 
         //this ends the function if they do not share films
         if (sharedFilmTitles.length === 0) {
@@ -124,6 +117,7 @@ function App() {
         console.log(films);
         setSharedFilms(films);
 
+        //This block determines if they share planet, vehicle, or starship in that order
         if (planets1 == planets2) {
           const planetId = planets1.split("/")[5];
           const planetResponse = await fetch(`/api/planets/${planetId}`);
@@ -134,17 +128,8 @@ function App() {
           setSharedHomeworld("");
         }
 
-        const sharedStarships = starships1.filter((starship) =>
-          starships2.some((s) => s.url === starship.url)
-        );
-        const sharedVehicles = vehicles1.filter((vehicle) =>
-          vehicles2.some((v) => v.url === vehicle.url)
-        );
-
-        setSharedStarships(sharedStarships);
-        setSharedVehicles(sharedVehicles);
-
         //This block sets alert message if they shared a film and not a planet, starship, or vehicle
+        //*************** This needs rework attention */
         if (
           sharedStarships.length <= 0 &&
           sharedVehicles.length <= 0 &&
@@ -157,7 +142,7 @@ function App() {
           return;
         } else if (sharedFilms.length > 0) {
           setAlertMessage(
-            `${name1} and ${name2} have appeared in the following films together: ${films}. `
+            `${name1} and ${name2} have appeared in the following films together: ${films}.`
           );
         }
       } else {
