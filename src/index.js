@@ -22,18 +22,20 @@ function App() {
           setCharacters(JSON.parse(cachedData));
         } else {
           const response = await fetch("/api/people/");
-          const data = await response.json();
-          localStorage.setItem("characters", JSON.stringify(data));
-          setCharacters(data);
+          const allCharacterData = await response.json();
+          localStorage.setItem("characters", JSON.stringify(allCharacterData));
+          setCharacters(allCharacterData);
         }
       } catch (error) {
         console.error(error);
         setErrorMessage("Network error occurred. Please try again later.");
       }
     }
+    //This is the function that is called when the page loads
     fetchData();
   }, []);
 
+  //This is the function that is called when the compare button is clicked
   const handleCompare = async () => {
     try {
       setLoading(true);
@@ -43,21 +45,21 @@ function App() {
       } else if (selectedCharacter1 && selectedCharacter2) {
         //This is the set up for the first character
         const response1 = await fetch(selectedCharacter1);
-        const data1 = await response1.json();
-        console.log(data1, "this is data1");
-        const name1 = data1.name;
-        const films1 = data1.films;
-        const planets1 = data1.homeworld;
-        const starships1 = data1.starships
+        const character1 = await response1.json();
+        console.log(character1, "this is data1");
+        const name1 = character1.name;
+        const films1 = character1.films;
+        const planets1 = character1.homeworld;
+        const starships1 = character1.starships
           ? await Promise.all(
-              data1.starships.map((url) =>
+              character1.starships.map((url) =>
                 fetch(url).then((response) => response.json())
               )
             )
           : [];
-        const vehicles1 = data1.vehicles
+        const vehicles1 = character1.vehicles
           ? await Promise.all(
-              data1.vehicles.map((url) =>
+              character1.vehicles.map((url) =>
                 fetch(url).then((response) => response.json())
               )
             )
@@ -65,31 +67,33 @@ function App() {
 
         //This is the set up for the second character
         const response2 = await fetch(selectedCharacter2);
-        const data2 = await response2.json();
-        console.log(data2, "this is data2");
-        const name2 = data2.name;
-        const films2 = data2.films;
-        const planets2 = data2.homeworld;
-        const starships2 = data2.starships
+        const character2 = await response2.json();
+        console.log(character2, "this is character2");
+        const name2 = character2.name;
+        const films2 = character2.films;
+        const planets2 = character2.homeworld;
+        const starships2 = character2.starships
           ? await Promise.all(
-              data2.starships.map((url) =>
+              character2.starships.map((url) =>
                 fetch(url).then((response) => response.json())
               )
             )
           : [];
-        const vehicles2 = data2.vehicles
+        const vehicles2 = character2.vehicles
           ? await Promise.all(
-              data2.vehicles.map((url) =>
+              character2.vehicles.map((url) =>
                 fetch(url).then((response) => response.json())
               )
             )
           : [];
 
+        //This block determines if there are shared films
         const sharedFilms = films1
           .filter((film) => films2.includes(film))
           .map((filmUrl) => {
             console.log(filmUrl, "this is filmUrl");
-            const filmTitle = filmUrl.split("/")[5];
+            const filmTitle = filmUrl.match(/\/films\/(\d+)\//)[1];
+            // const filmTitle = filmUrl.split("/")[5];
             return { title: filmTitle, url: filmUrl };
           });
 
