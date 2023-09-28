@@ -7,4 +7,3 @@ document.body.appendChild(root);
 const app = <App />;
 const rootElement = ReactDOM.createRoot(root);
 rootElement.render(app);
-const container = document.getElementById("app");
