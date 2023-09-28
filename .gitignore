@@ -11,6 +11,7 @@ yarn-error.log
 
 # Compiled output
 dist/
+/dist
 build/
 *.min.js
 
