@@ -9,6 +9,9 @@ const app = express();
 
 // Proxy requests to Star Wars API
 app.use("/api/people/", async (req, res) => {
+  // For this request I used the public api to get the first page of characters and then used the count to determine how many pages there were.
+  // The I used a for loop to get the rest of the pages and then concatenated them all together to get all the characters.
+  // I know this is not the most efficient way to do this, but the SWAPI returns things paginated.
   try {
     const response = await axios.get("https://swapi.dev/api/people/");
     const data = response.data;
@@ -32,6 +35,7 @@ app.use("/api/people/", async (req, res) => {
   }
 });
 
+// This is used to get the film titles by hitting the public api
 app.use("/api/films/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -43,6 +47,7 @@ app.use("/api/films/:id", async (req, res) => {
   }
 });
 
+// This is used to get the planet names by hitting the public api
 app.use("/api/planets/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -54,6 +59,7 @@ app.use("/api/planets/:id", async (req, res) => {
   }
 });
 
+// This is used to get the starships names by hitting the public api
 app.use("/api/starships/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -65,6 +71,7 @@ app.use("/api/starships/:id", async (req, res) => {
   }
 });
 
+// This is used to get the vehicles names by hitting the public api
 app.use("/api/vehicles/:id", async (req, res) => {
   try {
     const id = req.params.id;

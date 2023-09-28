@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom/client";
 import React, { useState, useEffect } from "react";
 import "./index.css";
+import { sign } from "crypto";
 
 function App() {
   const [characters, setCharacters] = useState([]);
@@ -18,6 +19,7 @@ function App() {
   useEffect(() => {
     async function fetchData() {
       try {
+        // I added a local cachedData because I know the intial load can be pretty significant.
         const cachedData = localStorage.getItem("characters");
         if (cachedData) {
           setCharacters(JSON.parse(cachedData));
@@ -36,6 +38,8 @@ function App() {
   }, []);
 
   //This is the function that is called when the compare button is clicked
+  //I know the prompt asked to name the films they were in together, but I thought it would be more interesting to show all the shared data.
+  //I still listed the films but also added shared planets, starships and vehicles which all the data comes from the API which is all proxied through the server.
   const handleCompare = async () => {
     try {
       setLoading(true);
@@ -71,7 +75,6 @@ function App() {
             const filmIndex = filmUrl.match(/\/films\/(\d+)\//)[1];
             return { movieIndex: filmIndex };
           });
-
         const sharedFilmTitles = sharedFilms.map((film) => film.movieIndex);
 
         //this ends the function if they do not share films

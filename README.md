@@ -14,6 +14,8 @@ Set Up For Local Dev:
 Set Up With Dockerfile
 -Go to root of project
 -Build the Image
-  1. docker build -t people_connect_test .
-  2. docker run docker run -d -p 80:8080 -p 3000:3000 people_connect_test localapp:latest
--Go to localhost to ineract with the app
+
+1. docker build -t people_connect_test .
+   -Start the container
+2. docker run -d -p 8080:8080 -p 3000:3000 people_connect_test
+   -Go to localhost:8080 to interact with the app.
