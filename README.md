@@ -9,7 +9,9 @@ Set Up For Local Dev:
 
 1. npm install
 2. npm run build
-3. npm run server
+3. npm run server  
+
+-In a new terminal at the root of the project
 4. npm start
 
 Set Up With Dockerfile:  
