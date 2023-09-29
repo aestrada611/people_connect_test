@@ -11,7 +11,7 @@ Set Up For Local Dev:
 2. npm run build
 3. npm run server  
 
--In a new terminal at the root of the project
+-In a new terminal at the root of the project  
 4. npm start
 
 Set Up With Dockerfile:  
